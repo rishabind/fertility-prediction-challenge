@@ -10,9 +10,36 @@
 
 library(dplyr)
 library(tidyr)
-
+library(caret)
+library(Boruta)
 
 source("submission.R")
+
+library(readr)
+PreFer_train_data <- read_csv("C:/Users/Tyagi/Desktop/PREfer/5e8ab08c-b634-4948-8b47-8792d36d753f/training_data/PreFer_train_data.csv")
+
+
+library(readr)
+PreFer_train_outcome <- read_csv("C:/Users/Tyagi/Desktop/PREfer/5e8ab08c-b634-4948-8b47-8792d36d753f/training_data/PreFer_train_outcome.csv")
+
+# Merge both dataframes to get our final dataframe
+PreFer_train_outcome_combined=merge(PreFer_train_data,PreFer_train_outcome, by="nomem_encr")
+PreFer_train_outcome_comb <- PreFer_train_outcome_combined[order("nomem_encr"),]
+
+
+boruta_output <- Boruta(new_child ~ ., data=na.omit(PreFer_train_outcome_combined), doTrace=0)
+
+library(caret)
+set.seed(100)
+rPartMod <- train(new_child ~ ., data=na.omit(PreFer_train_outcome_combined), method="rpart")
+rpartImp <- varImp(rPartMod)
+print(rpartImp)
+
+
+
+
+
+
 
 print_usage <- function() {
   cat("Usage:\n")

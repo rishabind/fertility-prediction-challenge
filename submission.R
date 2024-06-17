@@ -12,7 +12,7 @@
 # clean_df should be used to clean (preprocess) the data.
 # 
 # run.R can be used to test your submission.
-
+install.packages( c("caret","Boruta", "glmnet","relaimp"))
 # List your packages here. Don't forget to update packages.R!
 library(dplyr) # as an example, not used here
 
