@@ -23,34 +23,27 @@ import joblib
 
 def clean_df(df, background_df=None):
     """
-    Preprocess the input dataframe to feed the model.
-    # If no cleaning is done (e.g. if all the cleaning is done in a pipeline) leave only the "return df" command
+    Preprocess the input dataframe to feed the model."""
 
-    Parameters:
-    df (pd.DataFrame): The input dataframe containing the raw data (e.g., from PreFer_train_data.csv or PreFer_fake_data.csv).
-    background (pd.DataFrame): Optional input dataframe containing background data (e.g., from PreFer_train_background_data.csv or PreFer_fake_background_data.csv).
+    # Cleaning is done here by dropping missing birth outcomes 
 
-    Returns:
-    pd.DataFrame: The cleaned dataframe with only the necessary columns and processed variables.
-    """
+   y_missing = df['outcome_available'] == 0
+   y_nm=df.loc[~y_missing]
 
-    ## This script contains a bare minimum working example
-    # Create new variable with age
-    df["age"] = 2024 - df["birthyear_bg"]
+ ## Cleaning is done by keeping  relevant variables
 
-    # Imputing missing values in age with the mean
-    df["age"] = df["age"].fillna(df["age"].mean())
+   y_nm[["cf20m003", "cf20m030", "cf20m128","ci20m006","ci20m007","ci20m008", "ch20m002","cv20l041","cv20l043","cv20l044"]].describe()
 
-    # Selecting variables for modelling
-    keepcols = [
-        "nomem_encr",  # ID variable required for predictions,
-        "age"          # newly created variable
-    ] 
-
-    # Keeping data with variables selected
-    df = df[keepcols]
-
-    return df
+    data =y_nm[["cf20m003", "cf20m030", "cf20m128","ci20m006","ci20m007","ci20m008", "ch20m002","cv20l041","cv20l043","cv20l044"]]
+    
+    ## Cleaning is done by keeping non-missing observations on relevant variables across both data and target df
+    X_isna = data.isna().any(axis=1)
+    X_isna
+    
+    data = data.drop(data[X_isna].index)
+    
+    
+    return data
 
 
 def predict_outcomes(df, background_df=None, model_path="model.joblib"):
@@ -97,3 +90,6 @@ def predict_outcomes(df, background_df=None, model_path="model.joblib"):
 
     # Return only dataset with predictions and identifier
     return df_predict
+    
+# Check if it runs on the server    
+python run.py PreFer_fake_data.csv PreFer_fake_background_data.csv
