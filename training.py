@@ -8,40 +8,45 @@ It is important to document your training steps here, including seed,
 number of folds, model, et cetera
 """
 
-def train_save_model(data, outcome_df):
+def train_save_model(cleaned_df, outcome_df):
+    """
+    Trains a model using the cleaned dataframe and saves the model to a file.
 
- ## Preprocess the data
-    categorical_columns_ordinal = ["cf20m181","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"]
-    categorical_columns_onehot =["cf20m003","cf20m030", "ci20m008"]
-    numeric_columns =["ch20m002"]
+    Parameters:
+    cleaned_df (pd.DataFrame): The cleaned data from clean_df function to be used for training the model.
+    outcome_df (pd.DataFrame): The data with the outcome variable (e.g., from PreFer_train_outcome.csv or PreFer_fake_outcome.csv).
+    """
     
-    from sklearn.preprocessing import OrdinalEncoder
-    encoder = OrdinalEncoder().set_output(transform="pandas")
-    
-    from sklearn.preprocessing import OneHotEncoder, StandardScaler
-    categorical_preprocessor = OneHotEncoder(handle_unknown="ignore")
-    numerical_preprocessor = StandardScaler()
-    
-    from sklearn.compose import ColumnTransformer
-    
-    preprocessor = ColumnTransformer([
-        ('one-hot-encoder', categorical_preprocessor, categorical_columns_onehot),
-        ('standard_scaler', numerical_preprocessor, numeric_columns)], remainder="passthrough")
-       
-    from sklearn.linear_model import LogisticRegression
-    from sklearn.pipeline import make_pipeline
-    
-    #  model
-    model = make_pipeline(preprocessor, LogisticRegression(max_iter=500))
+    ## This script contains a bare minimum working example
+    random.seed(1) # not useful here because logistic regression deterministic
     
     # Combine cleaned_df and outcome_df
     model_df = pd.merge(cleaned_df, outcome_df, on="nomem_encr")
 
     # Filter cases for whom the outcome is not available
     model_df = model_df[~model_df['new_child'].isna()]  
+    
+    ## Create imputer to impute missing values in the pipeline
+    imputer = KNNImputer(n_neighbors=2, weights="uniform").set_output(transform = "pandas")
+
+    ## Normalize variables
+    numerical_columns = ["age"]
+    categorical_columns = ["woonvorm_2020", "cf20m003"]
+        
+    categorical_preprocessor = OneHotEncoder(handle_unknown="ignore")
+    numerical_preprocessor = StandardScaler()
+
+    preprocessor = ColumnTransformer([
+    ('one-hot-encoder', categorical_preprocessor, categorical_columns),
+    ('standard_scaler', numerical_preprocessor, numerical_columns)])
+    
+    # Logistic regression model
+    #model = LogisticRegression()
+    model = make_pipeline(imputer, preprocessor, LogisticRegression(max_iter=500))
+
 
     # Fit the model
-    model.fit(model_df[['age']], model_df['new_child'])
+    model.fit(model_df[['age', 'woonvorm_2020', "cf20m003"]], model_df['new_child'])
 
     # Save the model
     joblib.dump(model, "model.joblib")
