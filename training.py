@@ -32,13 +32,16 @@ def train_save_model(cleaned_df, outcome_df):
     ## Normalize variables
     numerical_columns = ["age"]
     categorical_columns = ["woonvorm_2020", "cf20m003"]
-        
+    categorical_columns_ordinal = ["cf20m181","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"]  
+    
     categorical_preprocessor = OneHotEncoder(handle_unknown="ignore")
     numerical_preprocessor = StandardScaler()
-
+    encoder = OrdinalEncoder().set_output(transform="pandas")
+    
     preprocessor = ColumnTransformer([
     ('one-hot-encoder', categorical_preprocessor, categorical_columns),
-    ('standard_scaler', numerical_preprocessor, numerical_columns)])
+    ('standard_scaler', numerical_preprocessor, numerical_columns),
+    ('ordinal_encoder', encoder, categorical_columns_ordinal)])
     
     # Logistic regression model
     #model = LogisticRegression()
@@ -46,7 +49,9 @@ def train_save_model(cleaned_df, outcome_df):
 
 
     # Fit the model
-    model.fit(model_df[['age', 'woonvorm_2020', "cf20m003"]], model_df['new_child'])
+    model.fit(model_df[[ "age", "woonvorm_2020"
+                    ,"cf20m003", "cf20m030", "cf20m128","ci20m006","ci20m007"
+                    ,"ci20m008", "ch20m002","cv20l041","cv20l043","cv20l044"]], model_df['new_child'])
 
     # Save the model
     joblib.dump(model, "model.joblib")
