@@ -46,7 +46,7 @@ def clean_df(df, background_df=None):
     df["age"] = df["age"].fillna(df["age"].mean())
 
     # Selecting variables for modelling
-        keepcols = ["nomem_encr", "age", "woonvorm_2020"
+    keepcols = ["nomem_encr", "age", "woonvorm_2020"
                     ,"cf20m003", "cf20m030", "cf20m128","ci20m006","ci20m007"
                     ,"ci20m008", "ch20m002","cv20l041","cv20l043","cv20l044"] 
 
