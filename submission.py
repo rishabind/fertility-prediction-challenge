@@ -23,6 +23,7 @@ from sklearn.impute import KNNImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OrdinalEncoder
 import joblib
 
 def clean_df(df, background_df=None):
@@ -53,12 +54,7 @@ def clean_df(df, background_df=None):
     
 
 
-    # Keeping data with variables selected
-    cleaned_df = df[keepcols]
-
-    return cleaned_df
-
-def predict_outcomes(df, background_df=None, model_path="model.joblib"):
+    def predict_outcomes(df, background_df=None, model_path="model.joblib"):
     """Generate predictions using the saved model and the input dataframe.
 
     The predict_outcomes function accepts a Pandas DataFrame as an argument
