@@ -51,7 +51,10 @@ def clean_df(df, background_df=None):
                     ,"cf20m003", "cf20m030", "cf20m128","ci20m006","ci20m007"
                     ,"ci20m008", "ch20m002","cv20l041","cv20l043","cv20l044"] 
 
-    
+    # Keeping data with variables selected
+    cleaned_df = df[keepcols]
+
+    return cleaned_df
 
 
 def predict_outcomes(df, background_df=None, model_path="model.joblib"):
