@@ -18,13 +18,15 @@ run.py can be used to test your submission.
 # List your libraries and modules here. Don't forget to update environment.yml!
 # List your libraries and modules here. Don't forget to update environment.yml!
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.impute import KNNImputer
+from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import OrdinalEncoder
 import joblib
+import os
+
 
 def clean_df(df, background_df=None):
     """
@@ -47,9 +49,11 @@ def clean_df(df, background_df=None):
     df["age"] = df["age"].fillna(df["age"].mean())
 
     # Selecting variables for modelling
-    keepcols = ["nomem_encr", "age", "woonvorm_2020"
-                    ,"cf20m003", "ci20m006","ci20m007"
-                    ,"cv20l041","cv20l043","cv20l044"] 
+    keepcols = ["nomem_encr", "woonvorm_2020","cf20m003", "age", "cf20m128",
+                "cf20m129", "cf20m130","birthyear_bg", "nettohh_f_2020",
+                "ci20m379", "cf20m013","cf20m020", "cf20m022", "cf20m024",
+                "cf20m025", "cf20m027", "cf20m030", "burgstat_2020",
+                "woonvorm_2020", "oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"] 
 
     # Keeping data with variables selected
     cleaned_df = df[keepcols]
