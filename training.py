@@ -29,7 +29,7 @@ def train_save_model(cleaned_df, outcomes_df):
     nochildren= model_df[model_df['new_child']==0]
 
     from sklearn.utils import resample
-    children_upsample=resample(children, replace=True, n_samples=int(0.70*len(nochildren)), random_state=42)
+    children_upsample=resample(children, replace=True, n_samples=int(0.60*len(nochildren)), random_state=42)
     print(children_upsample['new_child'].sum())
 
     data_upsampled= pd.concat([nochildren, children_upsample])
@@ -63,7 +63,6 @@ def train_save_model(cleaned_df, outcomes_df):
     # XG Boost model
     from sklearn.ensemble import GradientBoostingClassifier
     XG= make_pipeline(preprocessor,GradientBoostingClassifier())
-    XG
 
     # Fit the model
     XG.fit(data_upsampled[["nomem_encr", "age", "woonvorm_2020","cf20m003",
