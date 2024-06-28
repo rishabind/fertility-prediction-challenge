@@ -42,18 +42,17 @@ def clean_df(df, background_df=None):
     """
 
     ## This script contains a bare minimum working example
-    # Create new variable with age
     df["age"] = 2024 - df["birthyear_bg"]
 
     # Imputing missing values in age with the mean
     df["age"] = df["age"].fillna(df["age"].mean())
 
     # Selecting variables for modelling
-    keepcols = ["nomem_encr", "woonvorm_2020","cf20m003", "age", "cf20m128",
-                "cf20m129", "cf20m130","birthyear_bg", "nettohh_f_2020",
+    keepcols = ["nomem_encr", "woonvorm_2020","cf20m003", "age", "cf20m128", 
+                "cf20m129", "cf20m130", "birthyear_bg", "nettohh_f_2020",
                 "ci20m379", "cf20m013","cf20m020", "cf20m022", "cf20m024",
-                "cf20m025", "cf20m027", "cf20m030", "burgstat_2020",
-                "woonvorm_2020", "oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"] 
+                "cf20m025", "cf20m027", "cf20m030","burgstat_2020","woonvorm_2020",
+                "oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"] 
 
     # Keeping data with variables selected
     cleaned_df = df[keepcols]
@@ -61,7 +60,7 @@ def clean_df(df, background_df=None):
     return cleaned_df
 
 
-def predict_outcomes(df, background_df=None, model_path="model.joblib"):
+def predict_outcomes(df, background_df=None, model_path="model_XG.joblib"):
     """Generate predictions using the saved model and the input dataframe.
 
     The predict_outcomes function accepts a Pandas DataFrame as an argument
@@ -96,7 +95,7 @@ def predict_outcomes(df, background_df=None, model_path="model.joblib"):
     vars_without_id = df.columns[df.columns != 'nomem_encr']
 
     # Generate predictions from model, should be 0 (no child) or 1 (had child)
-    predictions = model.predict(df[vars_without_id])
+    predictions = XG.predict(df[vars_without_id])
 
     # Output file should be DataFrame with two columns, nomem_encr and predictions
     df_predict = pd.DataFrame(
