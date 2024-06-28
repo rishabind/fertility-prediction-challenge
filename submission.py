@@ -95,7 +95,7 @@ def predict_outcomes(df, background_df=None, model_path="model_XG.joblib"):
     vars_without_id = df.columns[df.columns != 'nomem_encr']
 
     # Generate predictions from model, should be 0 (no child) or 1 (had child)
-    predictions = XG.predict(df[vars_without_id])
+    predictions = model.predict(df[vars_without_id])
 
     # Output file should be DataFrame with two columns, nomem_encr and predictions
     df_predict = pd.DataFrame(

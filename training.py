@@ -30,10 +30,10 @@ def train_save_model(cleaned_df, outcomes_df):
 
     from sklearn.utils import resample
     children_upsample=resample(children, replace=True, n_samples=int(0.60*len(nochildren)), random_state=42)
-    print(children_upsample['new_child'].sum())
+    #print(children_upsample['new_child'].sum())
 
     data_upsampled= pd.concat([nochildren, children_upsample])
-    print(data_upsampled["new_child"].value_counts())
+    #print(data_upsampled["new_child"].value_counts())
     
     
     ## Create imputer to impute missing values in the pipeline
