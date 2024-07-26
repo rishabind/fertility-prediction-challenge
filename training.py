@@ -18,7 +18,6 @@ def train_save_model(cleaned_df, outcomes_df):
     """
     
     # Combine cleaned_df and outcome_df
-    # Combine cleaned_df and outcome_df
     model_df = pd.merge(cleaned_df, outcomes_df, on="nomem_encr")
 
      # Filter cases for whom the outcome is not available
@@ -30,10 +29,10 @@ def train_save_model(cleaned_df, outcomes_df):
 
     from sklearn.utils import resample
     children_upsample=resample(children, replace=True, n_samples=int(0.60*len(nochildren)), random_state=42)
-    #print(children_upsample['new_child'].sum())
+    print(children_upsample['new_child'].sum())
 
     data_upsampled= pd.concat([nochildren, children_upsample])
-    #print(data_upsampled["new_child"].value_counts())
+    print(data_upsampled["new_child"].value_counts())
     
     
     ## Create imputer to impute missing values in the pipeline
@@ -44,11 +43,11 @@ def train_save_model(cleaned_df, outcomes_df):
                              fill_value = -1).set_output(transform ='pandas')
 
     ## Normalize variables
-    numerical_columns = ["age", "birthyear_bg", "nettohh_f_2020"]
-    categorical_columns = [ "cf20m003", "cf20m128", "cf20m013","cf20m024", "cf20m025",
-                           "cf20m027","burgstat_2020", "oplmet_2020"]
-    categorical_columns_ordinal = ["cf20m020", "cf20m129", "cf20m130", "cf20m022",
-                                   "ci20m006","ci20m007","cv20l041","cv20l043","cv20l044","ci20m379"]
+    numerical_columns = ["age", "birthyear_bg", "nettohh_f_2020", "age_sq"]
+    categorical_columns = [ "cf20m003", "cf20m128", "cf20m013", "cf20m025",
+                           "burgstat_2020", "oplmet_2020"]
+    categorical_columns_ordinal = ["cf20m020", "cf20m129", "cf20m130", "cf20m022","ci20m006","ci20m007",
+                                   "cv20l041","cv20l043","cv20l044","ci20m379"]
         
     categorical_preprocessor = make_pipeline(imputer2, OneHotEncoder(handle_unknown="ignore"))
     numerical_preprocessor = make_pipeline(imputer, StandardScaler())
@@ -63,14 +62,12 @@ def train_save_model(cleaned_df, outcomes_df):
     # XG Boost model
     from sklearn.ensemble import GradientBoostingClassifier
     XG= make_pipeline(preprocessor,GradientBoostingClassifier())
+    XG
 
     # Fit the model
-    XG.fit(data_upsampled[["nomem_encr", "age", "woonvorm_2020","cf20m003",
-                       "cf20m128", "cf20m129", "cf20m130", "birthyear_bg",
-                       "nettohh_f_2020", "ci20m379", "cf20m013","cf20m020",
-                       "cf20m022", "cf20m024", "cf20m025", "cf20m027", "cf20m030",
-                       "burgstat_2020", "oplmet_2020","ci20m006","ci20m007",
-                       "cv20l041","cv20l043","cv20l044"]], data_upsampled['new_child'])
+    XG.fit(data_upsampled[["nomem_encr", "woonvorm_2020","cf20m003", "cf20m004", "cf20m128", "cf20m129", "cf20m130", "birthyear_bg",
+                "nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022", "cf20m025", "burgstat_2020","woonvorm_2020",
+                "age", "age_sq","oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"]], data_upsampled['new_child'])
 
     # Save the model
     joblib.dump(XG, "model_XG.joblib")
