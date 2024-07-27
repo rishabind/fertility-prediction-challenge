@@ -24,6 +24,7 @@ from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler, OrdinalEncoder
 from sklearn.compose import ColumnTransformer
+from sklearn.utils import resample
 import joblib
 import os
 
@@ -41,18 +42,16 @@ def clean_df(df, background_df=None):
     pd.DataFrame: The cleaned dataframe with only the necessary columns and processed variables.
     """
 
-    ## This script contains a bare minimum working example
-    df["age"] = 2024 - df["birthyear_bg"]
+    df["age_sq"]= df["age_bg"]**2
 
-    # Imputing missing values in age with the mean
-    df["age"] = df["age"].fillna(df["age"].mean())
+     # Years with partner
+    df["years_partner"]= 2020- df["cf20m029"]
 
     # Selecting variables for modelling
-    keepcols = ["nomem_encr", "woonvorm_2020","cf20m003", "age", "cf20m128", 
-                "cf20m129", "cf20m130", "birthyear_bg", "nettohh_f_2020",
-                "ci20m379", "cf20m013","cf20m020", "cf20m022", "cf20m024",
-                "cf20m025", "cf20m027", "cf20m030","burgstat_2020","woonvorm_2020",
-                "oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"] 
+    keepcols = ["nomem_encr", "woonvorm_2020", "cf20m004",'cf20m024', 'cf20m029', "cf20m128", "cf20m129","years_partner",
+                "cf20m130", "birthyear_bg","nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022",
+                "cf20m025", 'ch20m219', "burgstat_2020","gender_bg", "migration_background_bg",
+                "oplmet_2020","ci20m006","ci20m007",'cr20m093',"cv20l041","cv20l043","cv20l044","age_bg","age_sq"] 
 
     # Keeping data with variables selected
     cleaned_df = df[keepcols]

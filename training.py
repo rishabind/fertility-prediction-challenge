@@ -43,9 +43,10 @@ def train_save_model(cleaned_df, outcomes_df):
                              fill_value = -1).set_output(transform ='pandas')
 
     ## Normalize variables
-    numerical_columns = ["age", "birthyear_bg", "nettohh_f_2020", "age_sq"]
-    categorical_columns = [ "cf20m003", "cf20m128", "cf20m013", "cf20m025",
-                           "burgstat_2020", "oplmet_2020"]
+    numerical_columns = ["age_bg", "age_sq", "nettohh_f_2020","birthyear_bg", "years_partner"]
+    categorical_columns = ["cf20m128", "cf20m013", "cf20m024","cf20m025",
+                           "burgstat_2020", "oplmet_2020", 'ch20m219', 'cr20m093',
+                          "gender_bg", "migration_background_bg","woonvorm_2020" ]
     categorical_columns_ordinal = ["cf20m020", "cf20m129", "cf20m130", "cf20m022","ci20m006","ci20m007",
                                    "cv20l041","cv20l043","cv20l044","ci20m379"]
         
@@ -65,9 +66,10 @@ def train_save_model(cleaned_df, outcomes_df):
     XG
 
     # Fit the model
-    XG.fit(data_upsampled[["nomem_encr", "woonvorm_2020","cf20m003", "cf20m004", "cf20m128", "cf20m129", "cf20m130", "birthyear_bg",
-                "nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022", "cf20m025", "burgstat_2020","woonvorm_2020",
-                "age", "age_sq","oplmet_2020","ci20m006","ci20m007", "cv20l041","cv20l043","cv20l044"]], data_upsampled['new_child'])
+    XG.fit(data_upsampled[["nomem_encr", "woonvorm_2020", "cf20m004",'cf20m024', "cf20m128", "cf20m129","years_partner",
+                "cf20m130", "birthyear_bg","nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022",
+                "cf20m025", 'ch20m219', "burgstat_2020","gender_bg", "migration_background_bg",
+                "oplmet_2020","ci20m006","ci20m007",'cr20m093',"cv20l041","cv20l043","cv20l044","age_bg","age_sq"]], data_upsampled['new_child'])
 
     # Save the model
     joblib.dump(XG, "model_XG.joblib")
