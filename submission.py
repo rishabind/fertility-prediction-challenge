@@ -44,16 +44,18 @@ def clean_df(df, background_df=None):
 
     df["age_sq"]= df["age_bg"]**2
 
-     # Years with partner
+    # Years with partner
     df["years_partner"]= 2020- df["cf20m029"]
+
+    # expand variable cf20m128 by adding another variable variability in thinking that the person will have more children in the future?,
+    df['variability_moreChildren'] = df[["cf11d128", "cf12e128", "cf13f128", "cf14g128", "cf15h128", "cf16i128", "cf17j128", "cf18k128", "cf19l128", "cf20m128"]].std(axis=1)
 
     # Selecting variables for modelling
     keepcols =  ["nomem_encr", "woonvorm_2020", 'cf20m024', 'cf20m029', "cf20m128", "cf20m129","years_partner",
                 "cf20m130", "birthyear_bg","nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022",
                 "cf20m025", 'ch20m219', "burgstat_2020","gender_bg", "migration_background_bg",
                 "oplmet_2020","ci20m006","ci20m007",'cr20m093',"cv20l041","cv20l043","cv20l044","age_bg","age_sq",
-                "variability_moreChildren", 'variability_NumberChildren']  
-
+                "variability_moreChildren"] 
     # Keeping data with variables selected
     cleaned_df = df[keepcols]
 
