@@ -67,12 +67,12 @@ def train_save_model(cleaned_df, outcomes_df):
     preprocessor2= ColumnTransformer([("ordinal-encoder", ordinal_preprocessor2, categorical_columns_plus_ordinal)],
     remainder="passthrough")
 
-    model_HG = make_pipeline(preprocessor2,HistGradientBoostingClassifier())
-    model_HG.fit(data_upsampled[["nomem_encr", "woonvorm_2020", 'cf20m024', 'cf20m029', "cf20m128", "cf20m129","years_partner",
+    model= make_pipeline(preprocessor2,HistGradientBoostingClassifier())
+    model.fit(data_upsampled[["woonvorm_2020", 'cf20m024', 'cf20m029', "cf20m128", "cf20m129","years_partner",
                 "cf20m130", "birthyear_bg","nettohh_f_2020", "ci20m379", "cf20m013","cf20m020", "cf20m022",
                 "cf20m025", 'ch20m219', "burgstat_2020","gender_bg", "migration_background_bg",
                 "oplmet_2020","ci20m006","ci20m007",'cr20m093',"cv20l041","cv20l043","cv20l044","age_bg","age_sq",
                 "variability_moreChildren", 'variability_NumberChildren']], data_upsampled['new_child'])
 
     # Save the model
-    joblib.dump(model_HG, "model_HG.joblib")
+    joblib.dump(model, "model.joblib")
